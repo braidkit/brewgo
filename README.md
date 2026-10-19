@@ -53,6 +53,19 @@ SQLite defaults to `backend/brewgo.db`, which is ignored by Git. Set `BREWGO_DB`
 
 The app binds to loopback for local use. A public production service would need real authentication, CSRF protection, store hours/availability, tax rules, rate limits, and a payment provider. These are outside this application.
 
+## Sample order history
+
+```sh
+npm run seed:orders
+npm start
+```
+
+The seed adds **300 synthetic orders over the previous 30 days**, across the five open cafes and all 12 products. It includes 40 sample customer profiles, repeat purchases, guest orders, varied baskets, and completed, cancelled, and refunded statuses. All payments remain simulated. The same pricing and tax rules as checkout calculate each basket.
+
+It writes to the app's SQLite database (`backend/brewgo.db`, or `BREWGO_DB` when set). Existing orders stay intact. Fixed sample IDs make the command safe to repeat: it does not duplicate orders or move their original dates. The data is local and is not committed to Git.
+
+Sample orders belong to separate synthetic identities, so they do not appear in a visitor's private order history. They are source data for the planned analytics reports; this branch does not add an admin console. Sales should include completed order subtotals, excluding tax, cancelled orders, and refunded orders. No new runtime dependencies are needed.
+
 ## Verify
 
 ```sh
