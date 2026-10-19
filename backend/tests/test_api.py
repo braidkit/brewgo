@@ -1,11 +1,12 @@
 import pytest
 from fastapi.testclient import TestClient
 from backend import app as module
+from backend import database
 
 
 @pytest.fixture
 def client(tmp_path, monkeypatch):
-    monkeypatch.setattr(module, "DB_PATH", str(tmp_path / "test.db"))
+    monkeypatch.setattr(database, "DB_PATH", str(tmp_path / "test.db"))
     with TestClient(module.app) as client:
         client.get("/api/catalog")
         yield client

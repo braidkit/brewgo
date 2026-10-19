@@ -22,6 +22,10 @@ The source of truth is `src/index.css`. All brand roles use OKLCH.
 
 The primary hue follows Impeccable's palette seed (188 degrees). Body text against white is 16.77:1, muted text against white is 7.07:1, and white on primary is 10.50:1. Ratios calculated from the source OKLCH colors.
 
+## Admin console
+
+An admin reviews café performance at a desk during a working day. The console uses the same teal, white, type family, and accessible controls. A quiet navigation rail separates reports; shared filters sit above grouped metrics, charts, and tables. Phone navigation scrolls horizontally and wide tables scroll inside their own regions. Charts use teal for values and keep exact figures available in tables. Sample payments and cache freshness remain visible.
+
 ## Typography
 
 One sans family: Avenir Next, Avenir, Segoe UI, then the platform sans. Normal sentence case. Fixed heading sizes, no fluid product typography. Hero display ranges from 32 to 52 px at structural breakpoints. Headings use a maximum tracking of -0.04 em and wrap long user-provided names.

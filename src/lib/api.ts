@@ -23,13 +23,16 @@ export function optionsText(item: CartItem, product?: Product) {
   if (product?.category === 'Bakery & food') return 'Freshly baked'
   return [item.size, product?.milk ? item.milk : null, item.extra_shot ? 'Extra shot' : null].filter(Boolean).join(' · ')
 }
+export class ApiError extends Error {
+  constructor(message: string, public status: number) { super(message) }
+}
 export async function api<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`/api${path}`, {
     ...options, headers: { 'Content-Type': 'application/json', ...options?.headers },
   })
   if (!response.ok) {
     const error = await response.json().catch(() => ({}))
-    throw new Error(typeof error.detail === 'string' ? error.detail : 'Something went wrong. Please try again.')
+    throw new ApiError(typeof error.detail === 'string' ? error.detail : response.status === 422 ? 'Check the filters and try again.' : 'Something went wrong. Please try again.', response.status)
   }
   return response.status === 204 ? undefined as T : response.json()
 }

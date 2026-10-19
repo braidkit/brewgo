@@ -8,6 +8,8 @@ product
 
 Customers ordering on a phone during a morning commute or at a desktop before leaving work. They want to choose a nearby cafe, customize coffee or tea, add food, and collect their order quickly.
 
+Admin users review sales, orders, products, customers, and café performance. They need private, read-only reports with clear metric definitions and date and store filters.
+
 ## Product Purpose
 
 A working React and FastAPI application for ordering ahead. Success means a clear store choice, accurate order total, simulated payment, and a useful pickup confirmation. Sample stores are in US cities and prices are in US dollars.
