@@ -10,7 +10,7 @@ Customers ordering on a phone during a morning commute or at a desktop before le
 
 ## Product Purpose
 
-A working React and FastAPI demonstration of ordering ahead. Success means a clear store choice, accurate order total, simulated payment, and a useful pickup confirmation. Sample stores are in US cities and prices are in US dollars.
+A working React and FastAPI application for ordering ahead. Success means a clear store choice, accurate order total, simulated payment, and a useful pickup confirmation. Sample stores are in US cities and prices are in US dollars.
 
 ## Brand Personality
 
@@ -25,8 +25,8 @@ Avoid generic SaaS dashboards, glass panels, gradient text, repeated promotional
 - Make the next ordering step clear.
 - Show prices and customization costs before adding an item.
 - Keep the pickup store visible throughout the purchase.
-- Support guest checkout and an optional clearly labeled demo customer account.
-- Confirm demo payments without contacting a payment provider.
+- Support guest checkout and an optional clearly labeled sample customer account.
+- Confirm orders without contacting a payment provider.
 
 ## Accessibility & Inclusion
 

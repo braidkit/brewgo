@@ -269,7 +269,7 @@ footer button { margin-left: auto; min-height: 44px; }
 .selected-label { font-size: 9px; font-weight: 500; background: var(--secondary); color: var(--primary); padding: 4px 7px; border-radius: 4px; margin-left: 10px; }
 .store-availability, .store-unavailable { display: flex; align-items: center; gap: 5px; color: var(--primary); font-size: 10px; margin-top: 9px; }
 .store-unavailable { color: var(--muted-foreground); }
-.demo-footnote { font-size: 10px; color: var(--muted-foreground); line-height: 1.7; text-align: center; }
+.app-footnote { font-size: 10px; color: var(--muted-foreground); line-height: 1.7; text-align: center; }
 .checkout-store { display: flex; align-items: start; gap: 13px; padding: 17px; background: var(--secondary); border-radius: 8px; color: var(--primary); }
 .checkout-store strong { font-size: 13px; }
 .checkout-store p { font-size: 11px; color: var(--muted-foreground); margin-top: 4px; }
@@ -323,7 +323,7 @@ footer button { margin-left: auto; min-height: 44px; }
 .how-steps li > span { display: grid; place-items: center; background: var(--secondary); color: var(--primary); border-radius: 50%; width: 34px; height: 34px; font-size: 12px; font-weight: 650; flex-shrink: 0; }
 .how-steps h3 { font-size: 14px; font-weight: 650; margin-bottom: 5px; }
 .how-steps p { font-size: 12px; line-height: 1.7; color: var(--muted-foreground); }
-.about-demo { background: var(--muted); color: var(--muted-foreground); padding: 15px; font-size: 11px; line-height: 1.8; border-radius: 6px; }
+.about-brewgo { background: var(--muted); color: var(--muted-foreground); padding: 15px; font-size: 11px; line-height: 1.8; border-radius: 6px; }
 
 @media (min-width: 1280px) {
   .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }

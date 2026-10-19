@@ -45,4 +45,4 @@ Feedback transitions take 160–250 ms. Image hover subtly enlarges the photogra
 
 ## Content rules
 
-US dollar prices, fictional stores, sample hours and nutrition. Demo payment is labeled before confirmation. Never request card details or imply a real order was sent. Customer accounts are explicitly local sample profiles with no email/password collection.
+US dollar prices, fictional stores, sample hours and nutrition. Payment simulation is explained before confirmation. Never request card details or imply a real order was sent. Customer accounts are explicitly local sample profiles with no email/password collection.

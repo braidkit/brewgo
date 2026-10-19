@@ -1,4 +1,4 @@
-"""BrewGo demo API. SQLite persistence, server-side prices, simulated payment only."""
+"""BrewGo API. SQLite persistence, server-side prices, simulated payment only."""
 from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 import json
@@ -46,7 +46,7 @@ async def lifespan(_app):
     yield
 
 
-app = FastAPI(title="BrewGo Coffee Demo", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="BrewGo Coffee", version="1.0.0", lifespan=lifespan)
 
 
 class CartItem(BaseModel):
@@ -64,7 +64,7 @@ class OrderRequest(BaseModel):
     request_key: str = Field(min_length=16, max_length=100)
 
 
-class DemoCustomer(BaseModel):
+class CustomerProfile(BaseModel):
     name: str = Field(min_length=1, max_length=50)
 
 
@@ -101,12 +101,12 @@ def account(brewgo_session: str | None = Cookie(default=None)):
     return {"customer": dict(customer) if customer else None}
 
 
-@app.post("/api/account/demo")
-def demo_account(body: DemoCustomer, response: Response):
+@app.post("/api/account/profile")
+def create_profile(body: CustomerProfile, response: Response):
     """Create a local sample profile, without real email or password collection."""
     name = body.name.strip()
     if not name:
-        raise HTTPException(422, "Enter a name for the demo profile.")
+        raise HTTPException(422, "Enter a name for your profile.")
     now = datetime.now(timezone.utc)
     customer_id, token = secrets.token_urlsafe(16), secrets.token_urlsafe(32)
     with connect() as db:
@@ -157,7 +157,7 @@ def create_order(body: OrderRequest, brewgo_guest: str | None = Cookie(default=N
         raise HTTPException(422, "This cafe is unavailable for pickup. Please choose another.")
     lines = [price_line(item) for item in body.items]
     subtotal = sum(line["line_total"] for line in lines)
-    tax = (subtotal * 825 + 5000) // 10000  # Demo tax: 8.25%, rounded once on subtotal.
+    tax = (subtotal * 825 + 5000) // 10000  # Sample tax: 8.25%, rounded once on subtotal.
     now = datetime.now(timezone.utc)
     customer = customer_for(brewgo_session)
     order = {

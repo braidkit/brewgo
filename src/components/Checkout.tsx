@@ -31,11 +31,11 @@ export default function Checkout({ cart, catalog, store, customer, onClose, onSu
     <div className="checkout-store"><MapPin size={21} /><div><strong>{store.name}, {store.city}</strong><p>{store.address}</p><span><Clock3 size={14} />Ready in {store.wait_minutes}–{store.wait_minutes + 3} min</span></div></div>
     <div className="checkout-items">{cart.map((item, index) => { const product = catalog.menu.find(p => p.id === item.product_id)!; return <div key={index}><span><strong>{item.quantity} × {product.name}</strong><small>{optionsText(item, product)}</small></span><span>{money(unitPrice(item, product, catalog) * item.quantity)}</span></div> })}</div>
     <form onSubmit={submit}><div className="field"><Label htmlFor="pickup-name">Name for pickup</Label><Input id="pickup-name" autoComplete="given-name" value={name} maxLength={50} placeholder="What should we call you?" onChange={e => setName(e.target.value)} aria-invalid={!!error && !name.trim()} aria-describedby={error ? 'checkout-error' : undefined} disabled={loading} required /></div>
-      <div className="payment-note"><ShieldCheck size={21} /><div><strong>Demo payment</strong><p>Payment is simulated. No card details or real charge.</p></div></div>
-      <div className="checkout-totals"><div><span>Subtotal</span><span>{money(subtotal)}</span></div><div><span>Demo sales tax (8.25%)</span><span>{money(tax)}</span></div><Separator /><div className="total"><strong>Total</strong><strong>{money(subtotal + tax)}</strong></div></div>
+      <div className="payment-note"><ShieldCheck size={21} /><div><strong>Payment confirmation</strong><p>Payment is simulated. No card details or real charge.</p></div></div>
+      <div className="checkout-totals"><div><span>Subtotal</span><span>{money(subtotal)}</span></div><div><span>Sales tax (8.25%)</span><span>{money(tax)}</span></div><Separator /><div className="total"><strong>Total</strong><strong>{money(subtotal + tax)}</strong></div></div>
       {error && <p id="checkout-error" role="alert" className="error-message">{error}</p>}
-      <Button className="confirm-payment" type="submit" disabled={loading}>{loading ? 'Confirming your order…' : 'Confirm demo payment'}{!loading && <ArrowRight size={17} />}</Button>
-      <p className="demo-footnote">This is a demo. No order is sent to a real cafe.</p>
+      <Button className="confirm-payment" type="submit" disabled={loading}>{loading ? 'Confirming your order…' : 'Confirm order'}{!loading && <ArrowRight size={17} />}</Button>
+      <p className="app-footnote">No order is sent to a real cafe.</p>
     </form>
   </DialogContent></Dialog>
 }
@@ -43,8 +43,8 @@ export default function Checkout({ cart, catalog, store, customer, onClose, onSu
 export function OrderConfirmation({ order, onClose }: { order: Order; onClose: () => void }) {
   const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0)
   return <Dialog open onOpenChange={open => !open && onClose()}><DialogContent className="confirmation-dialog">
-    <div className="confirmation-check"><Check size={32} /></div><DialogHeader><DialogTitle>We’ve got your order, {order.customer_name}.</DialogTitle><DialogDescription>Your demo order is confirmed. Here’s where to pick it up.</DialogDescription></DialogHeader>
+    <div className="confirmation-check"><Check size={32} /></div><DialogHeader><DialogTitle>We’ve got your order, {order.customer_name}.</DialogTitle><DialogDescription>Your order is confirmed. Here’s where to pick it up.</DialogDescription></DialogHeader>
     <div className="pickup-ticket"><span>Your pickup number</span><strong>{order.number}</strong><p><Clock3 size={17} />Ready in {order.store.wait_minutes}–{order.store.wait_minutes + 3} minutes</p><Separator /><h3>{order.store.name}, {order.store.city}</h3><p>{order.store.address}</p><small>Head to the pickup counter and look for your name.</small></div>
-    <div className="confirmation-total"><span>{itemCount} {itemCount === 1 ? 'item' : 'items'} · Demo payment confirmed</span><strong>{money(order.total)}</strong></div><Button onClick={onClose}>Back to the menu<ArrowRight size={17} /></Button><p className="demo-footnote">No real payment was taken. Your order is saved in Your orders.</p>
+    <div className="confirmation-total"><span>{itemCount} {itemCount === 1 ? 'item' : 'items'} · Payment confirmed</span><strong>{money(order.total)}</strong></div><Button onClick={onClose}>Back to the menu<ArrowRight size={17} /></Button><p className="app-footnote">No real payment was taken. Your order is saved in Your orders.</p>
   </DialogContent></Dialog>
 }

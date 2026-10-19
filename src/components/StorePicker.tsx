@@ -17,6 +17,6 @@ export default function StorePicker({ stores, selected, onSelect, onClose }: {
       <div><span className="store-city">{store.city}</span><h3>{store.name}{selected?.id === store.id && <span className="selected-label">Selected</span>}</h3><p>{store.address}</p><small>{store.hours} · Sample hours</small><span className={store.available ? 'store-availability' : 'store-unavailable'}><Clock3 size={13} />{store.available ? `Pickup in ${store.wait_minutes}–${store.wait_minutes + 3} min` : 'Unavailable for pickup'}</span></div>
       <Button size="icon" variant={selected?.id === store.id ? 'default' : 'outline'} disabled={!store.available} aria-label={`Choose ${store.name}, ${store.city}`} onClick={() => { onSelect(store); onClose() }}><ArrowRight size={18} /></Button>
     </div>)}{!matches.length && <div className="empty-search"><MapPin /><h3>No cafes found</h3><p>Try New York, Seattle, or Austin.</p><Button variant="outline" onClick={() => setQuery('')}>Show all cafes</Button></div>}</div>
-    <p className="demo-footnote">Fictional cafes for this demo. No location access is needed.</p>
+    <p className="app-footnote">Fictional cafes for this app. No location access is needed.</p>
   </DialogContent></Dialog>
 }

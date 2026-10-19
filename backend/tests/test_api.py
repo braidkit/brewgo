@@ -68,9 +68,9 @@ def test_guest_history_is_private_to_browser(client):
     assert other_order["id"] != client.get("/api/orders").json()["orders"][0]["id"]
 
 
-def test_demo_profile_and_logout(client):
+def test_profile_and_logout(client):
     assert client.get("/api/account").json()["customer"] is None
-    profile = client.post("/api/account/demo", json={"name": "  Alex  "})
+    profile = client.post("/api/account/profile", json={"name": "  Alex  "})
     assert profile.status_code == 200
     assert profile.json()["customer"]["name"] == "Alex"
     assert client.get("/api/account").json()["customer"] == profile.json()["customer"]
@@ -105,7 +105,7 @@ def test_food_has_no_drink_surcharges(client):
 
 
 def test_blank_profile_rejected(client):
-    assert client.post("/api/account/demo", json={"name": "  "}).status_code == 422
+    assert client.post("/api/account/profile", json={"name": "  "}).status_code == 422
 
 
 def test_guest_cookie_required():
