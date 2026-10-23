@@ -1,6 +1,10 @@
 'use strict';
 
+const path = require('node:path');
 const { calculateAnalytics } = require('./analytics');
+
+// Same default as backend/app.py: BREWGO_DB, else backend/brewgo.db.
+const DEFAULT_DB_PATH = path.join(__dirname, '..', '..', 'backend', 'brewgo.db');
 
 // Deep copy, so stored orders never share objects with callers.
 const copyOrder = (order) => structuredClone(order);
@@ -12,6 +16,28 @@ function createOrderRepository(initialOrders = []) {
     list: () => orders.map(copyOrder),
     add(order) {
       orders.push(copyOrder(order));
+    },
+  });
+}
+
+/**
+ * Read-only order store over the SQLite database that backend/app.py writes.
+ * Each list() opens the file read-only, reads the JSON `payload` column in id
+ * order, and closes it, so it sees current orders and never holds the file.
+ * Orders are parsed fresh on each call, so callers cannot change the store.
+ * In WAL mode SQLite still updates its -shm index file; order data is not written.
+ */
+function createSqliteOrderRepository(dbPath = process.env.BREWGO_DB ?? DEFAULT_DB_PATH) {
+  // Loaded here, so the in-memory repository works without node:sqlite.
+  const { DatabaseSync } = require('node:sqlite');
+  return Object.freeze({
+    list() {
+      const db = new DatabaseSync(dbPath, { readOnly: true });
+      try {
+        return db.prepare('SELECT payload FROM orders ORDER BY id').all().map((row) => JSON.parse(row.payload));
+      } finally {
+        db.close();
+      }
     },
   });
 }
@@ -33,4 +59,4 @@ function handleAdminAnalytics(request, repository) {
   return { status: 200, body: calculateAnalytics(repository.list()) };
 }
 
-module.exports = { createOrderRepository, authorizeAdmin, handleAdminAnalytics };
+module.exports = { createOrderRepository, createSqliteOrderRepository, authorizeAdmin, handleAdminAnalytics };
