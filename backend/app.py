@@ -5,39 +5,16 @@ import json
 import os
 from pathlib import Path
 import secrets
-import sqlite3
 from typing import Literal
 
 from fastapi import Cookie, FastAPI, HTTPException, Response
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from .catalog import MENU, MILKS, SIZES, STORES
-
-DB_PATH = os.environ.get("BREWGO_DB", str(Path(__file__).parent / "brewgo.db"))
-
-
-def connect():
-    db = sqlite3.connect(DB_PATH, timeout=10)
-    db.row_factory = sqlite3.Row
-    return db
-
-
-def init_db():
-    with connect() as db:
-        db.executescript("""
-            CREATE TABLE IF NOT EXISTS customers (
-                id TEXT PRIMARY KEY, name TEXT NOT NULL, created_at TEXT NOT NULL
-            );
-            CREATE TABLE IF NOT EXISTS sessions (
-                token TEXT PRIMARY KEY, customer_id TEXT NOT NULL, expires_at TEXT NOT NULL
-            );
-            CREATE TABLE IF NOT EXISTS orders (
-                id TEXT PRIMARY KEY, session_id TEXT NOT NULL, request_key TEXT NOT NULL,
-                customer_id TEXT, payload TEXT NOT NULL,
-                UNIQUE(session_id, request_key)
-            );
-        """)
+from .database import connect, init_db
+from .admin import audit_admin_request, router as admin_router
 
 
 @asynccontextmanager
@@ -47,6 +24,8 @@ async def lifespan(_app):
 
 
 app = FastAPI(title="BrewGo Coffee", version="1.0.0", lifespan=lifespan)
+app.middleware("http")(audit_admin_request)
+app.include_router(admin_router)
 
 
 class CartItem(BaseModel):
@@ -187,4 +166,9 @@ def order_history(brewgo_guest: str | None = Cookie(default=None), brewgo_sessio
 
 DIST = Path(__file__).resolve().parent.parent / "dist"
 if DIST.is_dir():
+    @app.get("/admin", include_in_schema=False)
+    @app.get("/admin/{page:path}", include_in_schema=False)
+    def admin_frontend(page: str = ""):
+        return FileResponse(DIST / "index.html", headers={"Cache-Control": "no-store"})
+
     app.mount("/", StaticFiles(directory=DIST, html=True), name="frontend")

@@ -35,11 +35,19 @@ Then open **http://127.0.0.1:8000**. FastAPI serves both the built React applica
 
 You can order as a guest. A sample profile uses only a first name and a 24-hour HTTP-only session cookie. It does not implement production identity or cross-device login.
 
+## Admin analytics
+
+Create an admin account with `.venv/bin/python -m backend.admin your-username`, then open `/admin`. The command prompts for a password. Admin access is separate from sample customer profiles. Six reports cover overview, sales, products, orders, customers, and cafés, with shared date and store filters. Reports use saved orders and label simulated payments.
+
+See [admin setup, API, metric definitions, and deployment settings](docs/admin-analytics.md). Use HTTPS and `BREWGO_SECURE_COOKIES=1` for deployment. No default admin credentials are included.
+
 ## Implementation
 
 - `src/`: React UI, typed API client, and shadcn components.
 - `backend/catalog.py`: menu, fictional cafes, and integer-cent prices.
-- `backend/app.py`: orders, simulated payments, customer profiles, sessions, and SQLite persistence.
+- `backend/app.py`: orders, simulated payments, customer profiles, sessions, and frontend hosting.
+- `backend/database.py`, `admin.py`, and `analytics.py`: SQLite schema, admin authentication, and read-only analytics.
+- `src/admin/`: protected admin console and charts, loaded separately from the customer app.
 - `backend/tests/`: API behavior tests with temporary databases.
 - `PRODUCT.md` and `DESIGN.md`: confirmed product context and implemented visual system.
 - `docs/ui-audit.md`: Impeccable review and verification evidence.
@@ -51,7 +59,7 @@ Orders are idempotent per guest session and request key, including concurrent re
 
 SQLite defaults to `backend/brewgo.db`, which is ignored by Git. Set `BREWGO_DB` to use another database path. Set `BREWGO_SECURE_COOKIES=1` when running behind HTTPS. Browser bag, store, and favorites use localStorage, with a memory-only fallback if browser storage is blocked.
 
-The app binds to loopback for local use. A public production service would need real authentication, CSRF protection, store hours/availability, tax rules, rate limits, and a payment provider. These are outside this application.
+The app binds to loopback for local use. Admin access has password authentication, session checks, origin checks, and rate limits. A public production ordering service still needs real customer authentication, CSRF protection for customer mutations, store hours/availability, tax rules, customer rate limits, and a payment provider.
 
 ## Sample order history
 
