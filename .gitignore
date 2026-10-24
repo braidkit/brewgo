@@ -5,6 +5,7 @@ __pycache__/
 .pytest_cache/
 *.pyc
 *.db
+!backend/brewgo.db
 *.db-shm
 *.db-wal
 .env
