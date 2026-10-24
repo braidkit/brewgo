@@ -4,7 +4,7 @@ A working order-ahead application with a **React + TypeScript** frontend, **shad
 
 ## Run locally
 
-Requires Node.js 22.12+ (or 20.19+) and Python 3.10+ on macOS/Linux.
+Requires Node.js 22.13+ and Python 3.10+ on macOS/Linux. The admin analytics work in `spec.md` needs only Node.js, because it reads SQLite with the built-in `node:sqlite`.
 
 ```sh
 npm ci
