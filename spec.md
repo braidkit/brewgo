@@ -1,7 +1,7 @@
 Act as the parent coordinator for a small BrewGo admin analytics implementation.
 
 Repo: BrewGo
-Branch: claude/admin-analytics
+Branch: feat/admin-analytics
 
 ## Context
 
@@ -16,7 +16,7 @@ Branch: claude/admin-analytics
 ## Before you make changes
 
 - Confirm the repository root and the current branch.
-- If claude/admin-analytics does not exist, create it from main.
+- If feat/admin-analytics does not exist, create it from main.
 - Work directly in this repository and branch.
 - Do not create another worktree or use a temporary repository.
 - Do not edit implementation files yourself.
