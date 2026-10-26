@@ -8,10 +8,12 @@ import secrets
 import sqlite3
 from typing import Literal
 
-from fastapi import Cookie, FastAPI, HTTPException, Response
+from fastapi import Cookie, FastAPI, Header, HTTPException, Response
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from .analytics import read_analytics
 from .catalog import MENU, MILKS, SIZES, STORES
 
 DB_PATH = os.environ.get("BREWGO_DB", str(Path(__file__).parent / "brewgo.db"))
@@ -93,6 +95,25 @@ def catalog(response: Response, brewgo_guest: str | None = Cookie(default=None))
     if not brewgo_guest:
         session_cookie(response, "brewgo_guest", secrets.token_urlsafe(32))
     return {"menu": MENU, "stores": STORES, "sizes": SIZES, "milks": MILKS, "currency": "USD"}
+
+
+def authorize_admin(authorization):
+    expected = os.environ.get("BREWGO_ADMIN_TOKEN")
+    if not expected or not authorization:
+        return False
+    scheme, separator, token = authorization.partition(" ")
+    if scheme.lower() != "bearer" or not separator or not token or any(c.isspace() for c in token):
+        return False
+    # Comparing bytes also handles non-ASCII input without compare_digest raising.
+    return secrets.compare_digest(token.encode("utf-8"), expected.encode("utf-8"))
+
+
+@app.get("/api/admin/analytics")
+def admin_analytics(response: Response, authorization: str | None = Header(default=None)):
+    if not authorize_admin(authorization):
+        raise HTTPException(403, "Forbidden", headers={"Cache-Control": "no-store"})
+    response.headers["Cache-Control"] = "no-store"
+    return read_analytics(DB_PATH)
 
 
 @app.get("/api/account")
@@ -186,5 +207,16 @@ def order_history(brewgo_guest: str | None = Cookie(default=None), brewgo_sessio
 
 
 DIST = Path(__file__).resolve().parent.parent / "dist"
+
+
+@app.get("/admin", include_in_schema=False)
+@app.get("/admin/", include_in_schema=False)
+def admin_page():
+    index = DIST / "index.html"
+    if not index.is_file():
+        raise HTTPException(503, "Frontend build is unavailable. Run npm run build.")
+    return FileResponse(index, headers={"Cache-Control": "no-store"})
+
+
 if DIST.is_dir():
     app.mount("/", StaticFiles(directory=DIST, html=True), name="frontend")
